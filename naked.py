@@ -6,6 +6,7 @@ import time
 import yaml
 
 from datetime import datetime
+from configparser import ConfigParser
 
 #---izprintē teksti kas norāda uz programmas darbības sākumu.
 print('Asteroid processing service')
@@ -14,9 +15,18 @@ print('Asteroid processing service')
 # Initiating and reading config values
 print('Loading configuration from file')
 
+try:
+		config = ConfigParser()
+		config.read('config.ini')
 #---nepieciešamie dati lai varētu izveidot pieteikumu nasa api.
-nasa_api_key = "yx2KdCqkWLyZaduhByErZWRuizwr4kSZWV9Wyebc"
-nasa_api_url = "https://api.nasa.gov/neo/"
+
+		nasa_api_key = config.get('nasa', 'api_key')
+		nasa_api_url = config.get('nasa', 'api_url')
+
+except:
+	logger.exception('')
+print('DONE')
+
 
 # Getting todays date
 #--- izveido datumu ar ko veiks pierasījumu no šibrīža laika ko iegūst ar datetime bibliotēku.
