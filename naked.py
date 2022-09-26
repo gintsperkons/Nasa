@@ -125,6 +125,13 @@ def push_asteroids_arrays_to_db(request_day, ast_array, hazardous):
 		else:
 			logger.debug("Asteroid already IN DB")
 
+def sort_ast_by_time(ast_arr):
+	if ast_arr == []:
+		return []
+	ast_arr.sort(key = lambda x: x[4], reverse=False)
+	return ast_arr
+
+
 if __name__ == "__main__":
 
 	connection = None
@@ -255,8 +262,8 @@ if __name__ == "__main__":
 
 		#--- noskaidro vai ir kāds objekts par tuvu zemei
 		if len(ast_hazardous) > 0:
+			tmp_ast_arr = sort_ast_by_time(ast_hazardous)
 
-			ast_hazardous.sort(key = lambda x: x[4], reverse=False)
 			#--- izprintē info par asterōīdiem kas ir par tuvu.
 			logger.info("Today's possible apocalypse (asteroid impact on earth) times:")
 			for asteroid in ast_hazardous:
