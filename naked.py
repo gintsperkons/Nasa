@@ -31,7 +31,7 @@ logger.info('Loading configuration from file')
 try:
 		config = ConfigParser()
 		config.read('config.ini')
-#---nepieciešamie dati lai varētu izveidot pieteikumu nasa api.
+#---Nolasa configurāciju no faila.
 
 		nasa_api_key = config.get('nasa', 'api_key')
 		nasa_api_url = config.get('nasa', 'api_url')
@@ -43,9 +43,9 @@ try:
 
 
 except:
-	logger.exception('')
+	logger.exception('Failed to read configuration file')
 logger.info('DONE')
-
+# Izveido savienojumu ar datubāzi
 def init_db():
 	global connection
 	connection = mysql.connector.connect(host=mysql_config_mysql_host, database=mysql_config_mysql_db, user=mysql_config_mysql_user, password=mysql_config_mysql_pass)
@@ -116,7 +116,7 @@ def mysql_insert_ast_into_db(create_date, hazardous, name, url, diam_min, diam_m
 		logger.error( "INSERT INTO `ast_daily` (`create_date`, `hazardous`, `name`, `url`, `diam_min`, `diam_max`, `ts`, `dt_utc`, `dt_local`, `speed`, `distance`, `ast_id`) VALUES ('" + str(create_date) + "', '" + str(hazardous) + "', '" + str(name) + "', '" + str(url) + "', '" + str(diam_min) + "', '" + str(diam_max) + "', '" + str(ts) + "', '" + str(dt_utc) + "', '" + str(dt_local) + "', '" + str(speed) + "', '" + str(distance) + "', '" + str(ast_id) + "')")
 		logger.error('Problem inserting asteroid values into DB: ' + str(e))
 		pass
-
+# Asteroīdu datus ieliek datubāzē
 def push_asteroids_arrays_to_db(request_day, ast_array, hazardous):
 	for asteroid in ast_array:
 		if mysql_check_if_ast_exists_in_db(request_day, asteroid[9]) == 0:
@@ -279,3 +279,4 @@ if __name__ == "__main__":
 			push_asteroids_arrays_to_db(request_date, ast_safe, 0)
 	else:
 		logger.error("Unable to get response from API. Response code: " + str(r.status_code) + " | content: " + str(r.text))
+	logger.info("Program is executed successfully")
